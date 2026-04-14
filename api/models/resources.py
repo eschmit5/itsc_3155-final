@@ -1,6 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
+from sqlalchemy import Column, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import relationship
-from datetime import datetime
 from ..dependencies.database import Base
 
 
@@ -8,7 +7,9 @@ class Resource(Base):
     __tablename__ = "resources"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    item = Column(String(100), unique=True, nullable=False)
-    amount = Column(Integer, index=True, nullable=False, server_default='0.0')
+    item = Column(String(100), unique=True, nullable=False, index=True)
+    amount = Column(Numeric(10, 2), nullable=False, server_default="0.00")
+    unit = Column(String(20), nullable=False)
+    menu_item_id = Column(Integer, ForeignKey("menu_items.id"), index=True)
 
-    recipes = relationship("Recipe", back_populates="resource")
+    menu_item = relationship("MenuItem", back_populates="resources")

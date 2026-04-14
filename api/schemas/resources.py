@@ -1,11 +1,13 @@
-from datetime import datetime
+from decimal import Decimal
 from typing import Optional
 from pydantic import BaseModel
 
 
 class ResourceBase(BaseModel):
     item: str
-    amount: int
+    amount: Decimal
+    unit: str
+    menu_item_id: Optional[int] = None
 
 
 class ResourceCreate(ResourceBase):
@@ -14,7 +16,9 @@ class ResourceCreate(ResourceBase):
 
 class ResourceUpdate(BaseModel):
     item: Optional[str] = None
-    amount: Optional[int] = None
+    amount: Optional[Decimal] = None
+    unit: Optional[str] = None
+    menu_item_id: Optional[int] = None
 
 
 class Resource(ResourceBase):
