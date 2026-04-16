@@ -38,7 +38,7 @@ def read_one(db: Session, item_id):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id).first()
         if not item:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found!")
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
@@ -99,7 +99,7 @@ def update_status(db: Session, item_id, new_status):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id)
         if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found!")
         item.update({"order_status": new_status}, synchronize_session=False)
         db.commit()
     except SQLAlchemyError as e:
@@ -113,7 +113,7 @@ def delete(db: Session, item_id):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id)
         if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found!")
         item.delete(synchronize_session=False)
         db.commit()
     except SQLAlchemyError as e:
