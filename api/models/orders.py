@@ -17,6 +17,6 @@ class Order(Base):
     # TODO: Consider what should go into OrderDetail vs Order.
 
     customer = relationship("Customer", back_populates="orders")
-    order_details = relationship("OrderDetail", back_populates="order")
-    payment = relationship("Payment", back_populates="order", uselist=False)
-    promotions = relationship("Promotion", back_populates="order")
+    order_details = relationship("OrderDetail", back_populates="order", cascade="all, delete-orphan")
+    payment = relationship("Payment", back_populates="order", uselist=False, cascade="all, delete-orphan")
+    promotions = relationship("Promotion", back_populates="order", cascade="all, delete-orphan")
