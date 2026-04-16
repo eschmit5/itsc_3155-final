@@ -59,6 +59,11 @@ def get_by_customer(db: Session, customer_id):
     return result
 
 
+def get_orders_by_customer(db: Session, customer_id):
+    """Alias for get_by_customer to maintain consistency with router naming."""
+    return get_by_customer(db, customer_id)
+
+
 def get_by_tracking(db: Session, tracking_number):
     try:
         item = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
@@ -70,11 +75,16 @@ def get_by_tracking(db: Session, tracking_number):
     return item
 
 
+def get_order_by_tracking(db: Session, tracking_number):
+    """Alias for get_by_tracking to maintain consistency with router naming."""
+    return get_by_tracking(db, tracking_number)
+
+
 def update(db: Session, item_id, request):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id)
         if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found!")
         update_data = request.dict(exclude_unset=True)
         item.update(update_data, synchronize_session=False)
         db.commit()
