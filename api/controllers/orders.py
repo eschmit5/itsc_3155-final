@@ -121,3 +121,26 @@ def delete(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def calculate_total(db: Session, item_id):
+    from ..models import order_details as order_detail_model
+    from ..models import menu_items as menu_model
+    from decimal import Decimal
+    
+    try:
+        order = read_one(db, item_id)
+        order_details = db.query(order_detail_model.OrderDetail).filter(
+            order_detail_model.OrderDetail.order_id == item_id
+        ).all()
+        
+        total = Decimal('0.00')
+        for detail in order_details:
+            menu_item = db.query(menu_model.MenuItem).filter(
+                menu_model.MenuItem.id == detail.menu_item_id
+            ).first()
+            if menu_item:
+                total += menu_item.price * detail.number_of_items
+        return total
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
